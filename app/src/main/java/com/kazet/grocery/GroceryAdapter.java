@@ -28,6 +28,10 @@ class GroceryAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public void setList(List<Item> items) {
+        this.items = items;
+    }
+
     @Override
     public int getCount() {
         return items.size();

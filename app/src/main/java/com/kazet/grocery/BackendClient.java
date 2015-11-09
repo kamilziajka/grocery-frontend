@@ -113,6 +113,18 @@ public class BackendClient {
         return items;
     }
 
+    void create(String name) {
+        try {
+            HttpPost post = new HttpPost(HOST + GROCERIES_POSTFIX + '/' + name);
+
+            HttpResponse response = client.execute(post);
+
+            response.getEntity().consumeContent();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     void update(Item item) {
         try {
             HttpPut put = new HttpPut(HOST + GROCERIES_POSTFIX + '/' + item.getName() + '/' + item.getQuantity());
