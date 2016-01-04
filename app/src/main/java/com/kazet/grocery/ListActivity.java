@@ -15,31 +15,44 @@ public class ListActivity extends ActionBarActivity {
     private ListView listView;
 
     private BackendClient client;
+    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        client = BackendClient.getInstance();
+        store = new Store(getApplicationContext());
 
-        final EditText editText = (EditText) findViewById(R.id.editTextCreate);
+        final EditText editTextName = (EditText) findViewById(R.id.editTextCreate);
+        final EditText editTextQuantity = (EditText) findViewById(R.id.editTextQuantity);
         Button button = (Button) findViewById(R.id.buttonCreate);
+        Button buttonSync = (Button) findViewById(R.id.buttonSync);
 
         listView = (ListView) findViewById(R.id.listView);
 
-        List<Item> items = client.getGroceryList();
+        List<Item> items = store.getItemsList();
 
-        final GroceryAdapter adapter = new GroceryAdapter(this, items);
+        final GroceryAdapter adapter = new GroceryAdapter(this, items, store);
         listView.setAdapter(adapter);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.create(editText.getText().toString());
+                String name = editTextName.getText().toString();
+                Integer quantity = Integer.valueOf(editTextQuantity.getText().toString());
+                store.addDelta(name, new Delta(quantity));
 
-                List<Item> items = client.getGroceryList();
-                adapter.setList(items);
+                adapter.setList(store.getItemsList());
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        buttonSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                store.sync();
+                adapter.setList(store.getItemsList());
                 adapter.notifyDataSetChanged();
             }
         });

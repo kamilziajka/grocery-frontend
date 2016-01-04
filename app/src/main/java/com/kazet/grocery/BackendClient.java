@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -73,9 +74,7 @@ public class BackendClient {
         return status >= 200 && status < 300;
     }
 
-    List<Item> getGroceryList() {
-        List<Item> items = new ArrayList<Item>();
-
+    public void populateDeltas(Store store) {
         try {
             HttpGet get = new HttpGet(HOST + GROCERIES_POSTFIX);
 
@@ -96,52 +95,46 @@ public class BackendClient {
 
                 String jsonData = stringBuilder.toString();
 
-                JSONObject jsonObject = new JSONObject(jsonData);
+                JSONArray jsonArray = new JSONArray(jsonData);
 
-                for (Iterator iterator = jsonObject.keys(); iterator.hasNext();) {
-                    String name = (String) iterator.next();
-                    Integer quantity = jsonObject.getInt(name);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                    items.add(new Item(name, quantity));
+                    Delta delta = new Delta(
+                            jsonObject.getInt("quantity"),
+                            jsonObject.getString("guid")
+                    );
+
+                    store.addDelta(jsonObject.getString("name"), delta);
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return items;
     }
 
-    void create(String name) {
+    public void uploadDeltas(Store store) {
+        for (Item item : store.getItemsList()) {
+            for (Delta delta : item.getDeltas()) {
+                uploadDelta(item.getName(), delta);
+            }
+        }
+    }
+
+    private void uploadDelta(String name, Delta delta) {
         try {
-            HttpPost post = new HttpPost(HOST + GROCERIES_POSTFIX + '/' + name);
+            HttpPost post = new HttpPost(HOST + GROCERIES_POSTFIX);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name", name);
+            jsonObject.put("guid", delta.getGuid());
+            jsonObject.put("quantity", delta.getQuantity());
+
+            post.setEntity(new StringEntity(jsonObject.toString()));
+            post.setHeader("Content-Type", "application/json");
 
             HttpResponse response = client.execute(post);
-
-            response.getEntity().consumeContent();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    void update(Item item) {
-        try {
-            HttpPut put = new HttpPut(HOST + GROCERIES_POSTFIX + '/' + item.getName() + '/' + item.getQuantity());
-
-            HttpResponse response = client.execute(put);
-
-            response.getEntity().consumeContent();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    void delete(Item item) {
-        try {
-            HttpDelete put = new HttpDelete(HOST + GROCERIES_POSTFIX + '/' + item.getName());
-
-            HttpResponse response = client.execute(put);
 
             response.getEntity().consumeContent();
         } catch (Exception e) {

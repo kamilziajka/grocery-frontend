@@ -14,16 +14,16 @@ import java.util.List;
 class GroceryAdapter extends BaseAdapter {
     private Context context;
     private List<Item> items;
+    private Store store;
 
-    private BackendClient client;
+    //private BackendClient client;
 
     private static LayoutInflater inflater = null;
 
-    public GroceryAdapter(Context context, List<Item> items) {
+    public GroceryAdapter(Context context, List<Item> items, Store store) {
         this.context = context;
         this.items = items;
-
-        client = BackendClient.getInstance();
+        this.store = store;
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -68,11 +68,9 @@ class GroceryAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Item item = items.get(position);
-                Integer quantity = item.getQuantity() + Integer.parseInt(editText.getText().toString());
+                Integer quantity = Integer.parseInt(editText.getText().toString());
                 quantity = quantity < 0 ? 0 : quantity;
-                item.setQuantity(quantity);
-                client.update(item);
-                items = client.getGroceryList();
+                store.addDelta(item.getName(), new Delta(quantity));
                 notifyDataSetChanged();
             }
         });
@@ -81,11 +79,9 @@ class GroceryAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Item item = items.get(position);
-                Integer quantity = item.getQuantity() - Integer.parseInt(editText.getText().toString());
+                Integer quantity = Integer.parseInt(editText.getText().toString());
                 quantity = quantity < 0 ? 0 : quantity;
-                item.setQuantity(quantity);
-                client.update(item);
-                items = client.getGroceryList();
+                store.addDelta(item.getName(), new Delta(-quantity));
                 notifyDataSetChanged();
             }
         });
@@ -94,8 +90,7 @@ class GroceryAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Item item = items.get(position);
-                client.delete(item);
-                items = client.getGroceryList();
+                store.addDelta(item.getName(), new Delta(-item.getQuantity()));
                 notifyDataSetChanged();
             }
         });
