@@ -1,52 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="25dp">
+    android:layout_width="match_parent" android:layout_height="25dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/textViewName"
-        android:text="lorem"
-        android:layout_weight="2" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="ipsum"
-        android:id="@+id/textViewQuantity"
-        android:layout_weight="0.75" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/textViewName"
+            android:text="lorem"
+            android:layout_weight="2" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="2dp"
-        android:layout_height="wrap_content"
-        android:text="+"
-        android:id="@+id/buttonIncrement"
-        android:layout_weight="0.75" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="ipsum"
+            android:id="@+id/textViewQuantity"
+            android:layout_weight="0.75" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="2dp"
-        android:layout_height="wrap_content"
-        android:text="-"
-        android:id="@+id/buttonDecrement"
-        android:layout_weight="0.75" />
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="2dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/buttonIncrement"
+            android:layout_weight="0.75" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_weight="0.75"
-        android:text="1" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:layout_weight="0.75"
+            android:text="1" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="2dp"
-        android:layout_height="wrap_content"
-        android:text="X"
-        android:id="@+id/buttonDelete"
-        android:layout_weight="0.85" />
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="2dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/buttonDecrement"
+            android:layout_weight="0.75" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="2dp"
+            android:layout_height="wrap_content"
+            android:text="X"
+            android:id="@+id/buttonDelete"
+            android:layout_weight="0.85" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:weightSum="1">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextCategory"
+            android:text="kategoria"
+            android:layout_weight="0.61" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextPriority"
+            android:text="1"
+            android:layout_weight="0.15" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zapisz"
+            android:id="@+id/buttonSave" />
+
+    </LinearLayout>
 
 </LinearLayout>

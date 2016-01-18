@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -96,13 +98,17 @@ public class BackendClient {
                 String jsonData = stringBuilder.toString();
 
                 JSONArray jsonArray = new JSONArray(jsonData);
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     Delta delta = new Delta(
                             jsonObject.getInt("quantity"),
-                            jsonObject.getString("guid")
+                            jsonObject.getString("guid"),
+                            jsonObject.getString("category"),
+                            Integer.parseInt(jsonObject.getString("priority")),
+                            df.parse(jsonObject.getString("update"))
                     );
 
                     store.addDelta(jsonObject.getString("name"), delta);
@@ -130,6 +136,10 @@ public class BackendClient {
             jsonObject.put("name", name);
             jsonObject.put("guid", delta.getGuid());
             jsonObject.put("quantity", delta.getQuantity());
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            jsonObject.put("update", df.format(delta.getDate()));
+            jsonObject.put("category", delta.getCategory());
+            jsonObject.put("priority", delta.getPriority());
 
             post.setEntity(new StringEntity(jsonObject.toString()));
             post.setHeader("Content-Type", "application/json");

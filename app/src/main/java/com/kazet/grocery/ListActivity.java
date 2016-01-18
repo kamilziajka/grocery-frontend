@@ -26,6 +26,8 @@ public class ListActivity extends ActionBarActivity {
 
         final EditText editTextName = (EditText) findViewById(R.id.editTextCreate);
         final EditText editTextQuantity = (EditText) findViewById(R.id.editTextQuantity);
+        final EditText editTextCategory = (EditText) findViewById(R.id.editTextCategory);
+        final EditText editTextPriority = (EditText) findViewById(R.id.editTextPriority);
         Button button = (Button) findViewById(R.id.buttonCreate);
         Button buttonSync = (Button) findViewById(R.id.buttonSync);
 
@@ -41,7 +43,9 @@ public class ListActivity extends ActionBarActivity {
             public void onClick(View view) {
                 String name = editTextName.getText().toString();
                 Integer quantity = Integer.valueOf(editTextQuantity.getText().toString());
-                store.addDelta(name, new Delta(quantity));
+                String category = editTextCategory.getText().toString();
+                Integer priority = Integer.parseInt(editTextPriority.getText().toString());
+                store.addDelta(name, new Delta(quantity, category, priority));
 
                 adapter.setList(store.getItemsList());
                 adapter.notifyDataSetChanged();
